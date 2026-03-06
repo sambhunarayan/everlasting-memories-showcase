@@ -4,18 +4,25 @@ import VideoCard from "./VideoCard";
 const videos = [
   {
     title: "Wedding Highlights",
-    description: "The most beautiful moments from our special day, captured in a cinematic highlight reel.",
+    description:
+      "The most beautiful moments from our special day, captured in a cinematic highlight reel.",
     driveFileId: "1zv8H9kTejK-5pIJarZQErJcnDiy4MOHw",
+    // one unique thumbnail per video (place matching files in src/assets)
+    thumbnails: ["thumbnail-1"],
   },
   {
     title: "Reception Celebration",
-    description: "Toasts, first dance, and all the joy shared with our loved ones during the reception.",
+    description:
+      "Toasts, first dance, and all the joy shared with our loved ones during the reception.",
     driveFileId: "1lfHVyCAlWn5wHjPAyziuVNp5Yonb3RxV",
+    thumbnails: ["thumbnail-2"],
   },
   {
     title: "Full Ceremony",
-    description: "Our complete wedding ceremony — the vows, the rings, and the beginning of forever.",
+    description:
+      "Our complete wedding ceremony — the vows, the rings, and the beginning of forever.",
     driveFileId: "1QqJSQLSnlYY6F-afv0RtFZsKlRcAdZ55",
+    thumbnails: ["thumbnail-3"],
   },
 ];
 

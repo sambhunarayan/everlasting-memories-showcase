@@ -2,16 +2,21 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
+// Resolve static assets via Vite-friendly URLs so they load reliably at runtime.
+const resolve = (name: string) => new URL(`../assets/${name}`, import.meta.url).href;
+const placeholder = resolve("hero-bg.jpg");
+
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80", alt: "Wedding ceremony" },
-  { src: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80", alt: "Bride portrait" },
-  { src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80", alt: "Wedding venue" },
-  { src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80", alt: "First dance" },
-  { src: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80", alt: "Wedding rings" },
-  { src: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800&q=80", alt: "Bouquet" },
-  { src: "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800&q=80", alt: "Wedding couple" },
-  { src: "https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=800&q=80", alt: "Wedding details" },
-  { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80", alt: "Reception decor" },
+  { src: resolve("gallery-1.jpg"), alt: "Wedding ceremony" },
+  { src: resolve("gallery-2.jpg"), alt: "Bride portrait" },
+  { src: resolve("gallery-3.jpg"), alt: "Wedding venue" },
+  { src: resolve("gallery-4.jpg"), alt: "First dance" },
+  { src: resolve("gallery-5.jpg"), alt: "Wedding rings" },
+  { src: resolve("gallery-6.jpg"), alt: "Bouquet" },
+  { src: resolve("gallery-7.jpg"), alt: "Wedding couple" },
+  { src: resolve("gallery-8.jpg"), alt: "Wedding details" },
+  // gallery-9 on disk is `gallery-9.JPG` (uppercase extension)
+  { src: resolve("gallery-9.JPG"), alt: "Reception decor" },
 ];
 
 const GalleryGrid = () => {
@@ -74,11 +79,28 @@ const GalleryGrid = () => {
                   loading="lazy"
                   className={`w-full transition-transform duration-700 group-hover:scale-105 ${loadedImages.has(i) ? "block" : "hidden"}`}
                   onLoad={() => setLoadedImages(prev => new Set(prev).add(i))}
+                  onError={(e) => {
+                    // if loading fails (wrong path/case/CORS), show placeholder and mark as loaded
+                    const el = e.currentTarget as HTMLImageElement;
+                    if (el.src !== placeholder) el.src = placeholder;
+                    setLoadedImages(prev => new Set(prev).add(i));
+                  }}
                 />
                 <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300" />
               </button>
             </motion.div>
           ))}
+        </div>
+
+        <div className="text-center mt-8">
+          <a
+            href="https://drive.google.com/drive/folders/1GDX7z3xe9U7WCeewfj3YIfobtzU1nknQ?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block font-body text-xs uppercase tracking-[0.25em] text-black bg-white border border-primary-foreground/30 px-8 py-3 rounded-full hover:bg-transparent transition-colors"
+          >
+            Show All
+          </a>
         </div>
       </div>
 

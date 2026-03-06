@@ -7,14 +7,40 @@ interface VideoCardProps {
   title: string;
   description: string;
   driveFileId: string;
+  // optional list of up to 3 local thumbnail filenames (e.g. "thumbnail-1.jpg") placed in src/assets
+  thumbnails?: string[];
   index: number;
 }
 
-const VideoCard = ({ title, description, driveFileId, index }: VideoCardProps) => {
+const VideoCard = ({ title, description, driveFileId, index, thumbnails }: VideoCardProps) => {
   const [loaded, setLoaded] = useState(false);
   const [playing, setPlaying] = useState(false);
 
   const thumbnailUrl = `https://drive.google.com/thumbnail?id=${driveFileId}&sz=w800`;
+  // local placeholder in case the Drive thumbnail is inaccessible (permissions/CORS)
+  const placeholder = new URL("../assets/hero-bg.jpg", import.meta.url).href;
+  // resolve up to three thumbnails from the assets folder if provided
+  const resolveAsset = (name: string) => {
+    // Try the provided name as-is (if it has an extension), otherwise try common image extensions.
+    const tryExts = name.includes(".") ? [""] : [".jpg", ".png", ".svg"];
+    for (const ext of tryExts) {
+      try {
+        return new URL(`../assets/${name}${ext}`, import.meta.url).href;
+      } catch (e) {
+        // continue trying other extensions
+      }
+    }
+    return null;
+  };
+
+  const resolvedThumbnails = (thumbnails ?? [])
+    .slice(0, 3)
+    .map((n) => resolveAsset(n))
+    .filter(Boolean) as string[];
+
+  const initialSrc = resolvedThumbnails.length > 0 ? resolvedThumbnails[0] : thumbnailUrl;
+  const [src, setSrc] = useState<string>(initialSrc);
+  const [activeThumb, setActiveThumb] = useState<number>(resolvedThumbnails.length > 0 ? 0 : -1);
 
   return (
     <motion.div
@@ -32,11 +58,15 @@ const VideoCard = ({ title, description, driveFileId, index }: VideoCardProps) =
                 <Skeleton className="absolute inset-0 rounded-none" />
               )}
               <img
-                src={thumbnailUrl}
+                src={src}
                 alt={title}
                 className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
                 onLoad={() => setLoaded(true)}
-                onError={() => setLoaded(true)}
+                onError={() => {
+                  // If Drive thumbnail fails (not shared/public or CORS), fall back to local placeholder
+                  if (src !== placeholder) setSrc(placeholder);
+                  setLoaded(true);
+                }}
               />
               <button
                 onClick={() => setPlaying(true)}
@@ -46,6 +76,28 @@ const VideoCard = ({ title, description, driveFileId, index }: VideoCardProps) =
                   <Play className="h-6 w-6 text-primary-foreground ml-1" />
                 </div>
               </button>
+              {/* Thumbnails selector (local assets) */}
+              {resolvedThumbnails.length > 0 && (
+                <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                  {resolvedThumbnails.map((t, idx) => (
+                    <button
+                      key={t}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (src !== t) {
+                          setLoaded(false);
+                          setSrc(t);
+                          setActiveThumb(idx);
+                        }
+                      }}
+                      className={`w-14 h-9 rounded overflow-hidden border-2 ${activeThumb === idx ? "border-primary" : "border-transparent"}`}
+                      aria-label={`Thumbnail ${idx + 1}`}
+                    >
+                      <img src={t} alt={`${title} thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </>
           ) : (
             <iframe
