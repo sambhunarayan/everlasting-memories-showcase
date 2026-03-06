@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { CalendarDays, MapPin } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "../assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
@@ -28,7 +28,7 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.4 }}
           className="font-display text-6xl md:text-8xl lg:text-9xl font-light text-primary-foreground mb-6 italic"
         >
-          Amelia & James
+          Silpa & Sambhu
         </motion.h1>
 
         <motion.div
@@ -46,12 +46,12 @@ const HeroSection = () => {
         >
           <div className="flex items-center gap-2 font-body text-sm tracking-wider">
             <CalendarDays className="h-4 w-4" />
-            <span>September 15, 2025</span>
+            <span>February 6, 2026</span>
           </div>
           <span className="hidden sm:block w-1 h-1 rounded-full bg-primary-foreground/50" />
           <div className="flex items-center gap-2 font-body text-sm tracking-wider">
             <MapPin className="h-4 w-4" />
-            <span>Tuscany, Italy</span>
+            <span>chenagannur, Alappey</span>
           </div>
         </motion.div>
 
