@@ -28,7 +28,7 @@ const Navbar = () => {
         <a href="#home" className="flex items-center gap-2 font-display text-2xl font-semibold tracking-wide">
           <Heart className={`h-5 w-5 ${scrolled ? "text-primary" : "text-primary-foreground"}`} />
           <span className={scrolled ? "text-foreground" : "text-primary-foreground"}>
-            S & S
+            
           </span>
         </a>
 
