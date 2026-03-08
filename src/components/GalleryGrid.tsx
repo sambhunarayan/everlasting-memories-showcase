@@ -15,8 +15,7 @@ const galleryImages = [
   { src: resolve("gallery-6.jpg"), alt: "Bouquet" },
   { src: resolve("gallery-7.jpg"), alt: "Wedding couple" },
   { src: resolve("gallery-8.jpg"), alt: "Wedding details" },
-  // gallery-9 on disk is `gallery-9.JPG` (uppercase extension)
-  { src: resolve("gallery-9.JPG"), alt: "Reception decor" },
+  { src: resolve("gallery-9.jpg"), alt: "Reception decor" },
 ];
 
 const GalleryGrid = () => {
